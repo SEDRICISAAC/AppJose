@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { Image, Modal, TouchableHighlight, View, Alert, TextInput, FlatList, StyleSheet, ImageBackground, AsyncStorage,TouchableOpacity } from 'react-native';
 import { Container, Header, Content, Card, CardItem, Footer, FooterTab, Button, Text, Icon, Badge,Thumbnail, Left, Body, Right } from 'native-base';
 
-const API_URL = 'http://192.168.43.10:8001/server/menu/platos'
+const API_URL = 'http://192.168.100.12:8001/server/menu/platos'
+const API = 'http://192.168.100.12:8001/server/menu'
 export default class Home extends Component{
     constructor(props) {
         super(props);
@@ -10,7 +11,7 @@ export default class Home extends Component{
         this.state = {
             plato: this.plato,
             valor: this.valor,
-            datos: this.datos
+            datos: []
         }
     }
 
@@ -35,6 +36,40 @@ export default class Home extends Component{
         catch(error){
             console.log(error)
         }
+    }
+
+    realizarPedido = () => {
+      let tabla = "pedido";
+
+        let data = {
+            tabla: tabla, 
+            datos:
+              {
+                platoId: 1,
+                descripcion: this.state.plato,
+                cantidad: 2,
+              }
+        };
+
+        let header = {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        }
+
+        return fetch(API,header)
+        .then((response) => response.json())
+        .then((responseJson) => {
+            if(responseJson.ok != false){
+                alert('Pedido realizado')
+            }
+        })
+        .catch((error) => {
+            console.error(error);
+        })
     }
 
     getPlatos = () => {
@@ -66,37 +101,38 @@ export default class Home extends Component{
         return (  
             
         <Container>
-            <Header hasTabs style={{backgroundColor: 'black'}}/>
+          <Header hasTabs style={{backgroundColor: 'black'}}/>
 
-            <Content>
-          <Card>
-            <CardItem>
-              <Left>
-                <Thumbnail source={{uri: 'Image URL'}} />
-                <Body>
-                  <Text>Bolon</Text>
-                  <Text note>De Queso</Text>
-                </Body>
-              </Left>
-            </CardItem>
-            <CardItem cardBody>
-              <Image source={require('../assets/bolon.jpg')} style={{height: 200, width: null, flex: 1}}/>
-            </CardItem>
-            <CardItem>
-              <Left>
-                <Button transparent>
-                    <Text style={{color: 'black'}}>{this.state.valor} $</Text>
-                </Button>
-              </Left>
-              <Right>
-              <Button style={{backgroundColor: 'green'}} onPress={()=>{alert(JSON.stringify(this.state.datos))}}>
+          <Content>
+              <Card>
+                <CardItem>
+                  <Left>
+                    <Thumbnail source={{uri: 'Image URL'}} />
+                    <Body>
+                      <Text>item</Text>
+                      <Text note>De Queso</Text>
+                    </Body>
+                  </Left>
+                </CardItem>
+                <CardItem cardBody>
+                  <Image source={require('../assets/bolon.jpg')} style={{height: 200, width: null, flex: 1}}/>
+                </CardItem>
+                <CardItem>
+                  <Left>
+                    <Button transparent>
+                        <Text style={{color: 'black'}}>{this.state.valor} $</Text>
+                    </Button>
+                  </Left>
+                  <Right>
+                  <Button style={{backgroundColor: 'green'}} onPress={this.realizarPedido}>
                     <Text>Pedir</Text>
-                </Button>
-              </Right>
-            </CardItem>
-          </Card>
-        </Content>
-
+                  </Button>
+                  </Right>
+                </CardItem>
+              </Card>
+              
+          </Content>
+          
         <Footer>
           <FooterTab style={{backgroundColor: 'black'}}>
             <Button badge vertical onPress={() => this.props.navigation.push('Inicio')}>
@@ -104,7 +140,7 @@ export default class Home extends Component{
               <Icon name="apps" />
               <Text>Menu</Text>
             </Button>
-            <Button vertical>
+            <Button vertical onPress={()=>{alert(JSON.stringify(this.state.datos))}}>
               <Icon name="list" />
               <Text>Pedidos</Text>
             </Button>

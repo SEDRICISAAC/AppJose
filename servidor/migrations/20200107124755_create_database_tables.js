@@ -8,7 +8,7 @@ exports.up = function(knex, Promise) {
     .createTable("menu", function(table) {
       table.increments("id");
       table.string("plato");
-      table.integer("valor");
+      table.float("valor");
     })
 
     .createTable("pedido", function(table) {

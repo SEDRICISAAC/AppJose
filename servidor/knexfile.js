@@ -6,7 +6,7 @@ module.exports = {
     connection: {
       host: "127.0.0.1",
       user: "postgres",
-      password: "1999",
+      password: "root",
       database: "OrderNow"
     }
   }

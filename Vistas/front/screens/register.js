@@ -4,7 +4,7 @@ import { StyleSheet, ImageBackground, Text } from 'react-native';
 import { Container, Content, Card, CardItem, Body, Item, Label, Input, Button, AsyncStorage } from 'native-base';
 
 
-const API_URL = "http://192.168.43.10:8001/server/menu";
+const API_URL = "http://192.168.100.12:8001/server/menu";
 
 export default class Register extends Component {
     constructor(props){
